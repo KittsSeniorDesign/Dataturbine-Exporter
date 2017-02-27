@@ -23,23 +23,8 @@ public class DataturbineExporter {
 		// raise an exception, so just gobble all exceptions here.
 		} catch ( Exception error ) { }
 
-		// This constructor blocks until a client connects, which is very annoying
-		// because we can't set up the shutdown hook without an initialized server.
-		// If the client never connects and the program is interrupted here (e.g. by
-		// sigint), the socket file won't get cleaned up, which is why we delete it
-		// on startup.
 		UnixDomainSocketServer server = new UnixDomainSocketServer( arg[0], JUDS.SOCK_STREAM );
-
-		// Set up a hook to unlink the socket when the vm is exiting.
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			@Override
-			public void run( ) {
-				System.out.println("bye");
-				if (server != null) {
-					server.unlink( );
-				}
-			}
-		});
+		Runtime.getRuntime( ).addShutdownHook( new SocketCleanup( server ) );
 
 		Sender sender;
 		Receiver receiver;

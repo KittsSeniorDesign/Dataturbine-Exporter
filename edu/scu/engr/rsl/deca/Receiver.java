@@ -25,23 +25,28 @@ public class Receiver extends Thread {
 			// actually have no idea what circumstances it will throw an
 			// SAPIException under, because killing rbnb causes it to throw
 			// java.lang.IllegalStateException.
+			ChannelMap getmap;
 			try {
-				ChannelMap getmap = internalSink.Fetch( 1000 );
-				if ( getmap.GetChannelList().length > 0 ) {
-					// String dataString = new String( getmap.GetDataAsByteArray( 0 )[0] );
-					// System.out.println( getmap.GetName( 0 ) + ": " + dataString );
-					byte[] message = getmap.GetDataAsByteArray( 0 )[0];
-					try {
-						client.write( message );
-					} catch ( IOException error ) {
-						System.out.println( "Client write error: " + error.getMessage( ) );
-						return;
-					}
-				}
+				getmap = internalSink.Fetch( 1000 );
 			} catch ( SAPIException error ) {
 				System.out.println( "SAPIException: " + error.getMessage( ) );
-				return;
+				break;
+			} catch ( IllegalStateException error ) {
+				// this occurs if the rbnb server shuts down while we are waiting for
+				// a client read.
+				System.out.println( "Dataturbine has vanished." );
+				break;
+			}
+			if ( getmap.GetChannelList( ).length > 0 ) {
+				byte[] message = getmap.GetDataAsByteArray( 0 )[0];
+				try {
+					client.write( message );
+				} catch ( IOException error ) {
+					System.out.println( "Client write error: " + error.getMessage( ) );
+					break;
+				}
 			}
 		}
+		System.exit( 1 );
 	}
 }
