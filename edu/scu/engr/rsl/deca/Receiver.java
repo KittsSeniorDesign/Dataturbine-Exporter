@@ -40,7 +40,7 @@ public class Receiver extends Thread {
 				System.out.println( "Dataturbine has vanished." );
 				break;
 			}
-			if ( getmap.GetChannelList( ).length > 0 ) {
+			if ( getmap.NumberOfChannels( ) > 0 ) {
 				byte[] message = getmap.GetDataAsByteArray( 0 )[0];
 				try {
 					client.write( message );
