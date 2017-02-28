@@ -8,4 +8,4 @@ class ExporterLauncher(subprocess.Popen):
         super(ExporterLauncher, self).__init__( *args, **kwargs )
         print('Exporter launched.')
 
-exporter = ExporterLauncher('dtexporter.log', ('java','-jar','build/DataturbineExporter.jar','/tmp/dtexport.sock','localhost:3333','decabot-x'))
+exporter = ExporterLauncher('dtexporter.log', ('java','-jar','build/DataturbineExporter.jar','localhost:3333','/tmp/dtexport.sock','decabot-x'))

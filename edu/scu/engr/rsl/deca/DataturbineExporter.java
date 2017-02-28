@@ -19,20 +19,20 @@ public class DataturbineExporter {
 	 */
 	public static void main(String[] arg) throws Exception {
 		try {
-			File danglingSock = new File( arg[0] );
+			File danglingSock = new File( arg[1] );
 			danglingSock.delete( );
 		// If this fails due to permissions error, the socket constructor will
 		// raise an exception, so just gobble all exceptions here.
 		} catch ( Exception error ) { }
 
-		UnixDomainSocketServer server = new UnixDomainSocketServer( arg[0], JUDS.SOCK_STREAM );
+		UnixDomainSocketServer server = new UnixDomainSocketServer( arg[1], JUDS.SOCK_STREAM );
 		Runtime.getRuntime( ).addShutdownHook( new SocketCleanup( server ) );
 
 		Sender sender;
 		Receiver receiver;
 		try {
-			sender = new Sender( arg[1], arg[2], server.getInputStream( ) );
-			receiver = new Receiver( arg[1], arg[2], server.getOutputStream( ) );
+			sender = new Sender( arg[0], arg[2], server.getInputStream( ) );
+			receiver = new Receiver( arg[0], arg[2], server.getOutputStream( ) );
 		} catch ( SAPIException error ) {
 			System.out.println( "Could not connect to dataturbine." );
 			return;
