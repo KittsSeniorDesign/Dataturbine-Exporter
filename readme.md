@@ -1,3 +1,5 @@
+The original repo can be found at https://gitlab.com/DecaBot/DataturbineExporter
+
 JUDS has to be compiled by hand as it uses a native C library.
 
 ```
